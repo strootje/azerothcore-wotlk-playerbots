@@ -57,7 +57,7 @@ jobs:
 
       # {{{
       - uses: docker/metadata-action@v5
-        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-worldserver" }
+        with: { images: "${{ env.REGISTRY }}/strootje/acore/ac-wotlk-worldserver" }
         id: meta-worldserver
 
       - name: Build and push
@@ -76,7 +76,7 @@ jobs:
       # }}}
       # {{{
       - uses: docker/metadata-action@v5
-        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-authserver" }
+        with: { images: "${{ env.REGISTRY }}/strootje/acore/ac-wotlk-authserver" }
         id: meta-authserver
 
       - name: Build and push
@@ -95,7 +95,7 @@ jobs:
       # }}}
       # {{{
       - uses: docker/metadata-action@v5
-        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-db-import" }
+        with: { images: "${{ env.REGISTRY }}/strootje/acore/ac-wotlk-db-import" }
         id: meta-db-import
 
       - name: Build and push
@@ -114,7 +114,7 @@ jobs:
       # }}}
       # {{{
       - uses: docker/metadata-action@v5
-        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-client-data" }
+        with: { images: "${{ env.REGISTRY }}/strootje/acore/ac-wotlk-client-data" }
         id: meta-client-data
 
       - name: Build and push
@@ -133,7 +133,7 @@ jobs:
       # }}}
       # {{{
       - uses: docker/metadata-action@v5
-        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-tools" }
+        with: { images: "${{ env.REGISTRY }}/strootje/acore/ac-wotlk-tools" }
         id: meta-tools
 
       - name: Build and push
