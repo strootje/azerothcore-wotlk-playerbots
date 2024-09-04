@@ -27,6 +27,8 @@ jobs:
           sudo rm -rf /opt/ghc
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
+      - uses: actions/checkout@v4
+
       - name: Download AzerothCore
         uses: actions/checkout@v4
         with:
