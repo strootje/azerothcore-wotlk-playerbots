@@ -28,23 +28,24 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
       - uses: actions/checkout@v4
-        with: { path: customize }
 
       - name: Download AzerothCore
         uses: actions/checkout@v4
-        with: { repository: liyunfan1223/azerothcore-wotlk }
+        with:
+          repository: liyunfan1223/azerothcore-wotlk
+          path: src
 
       - name: Download PlayerBots
         uses: actions/checkout@v4
         with:
           repository: liyunfan1223/mod-playerbots
-          path: modules/mod-playerbots
+          path: src/modules/mod-playerbots
 
       - name: Download Eluna
         uses: actions/checkout@v4
         with:
           repository: azerothcore/mod-eluna
-          path: modules/mod-eluna
+          path: src/modules/mod-eluna
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -56,42 +57,98 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: build worldserver
-        uses: ./customize/.github/actions/build-and-publish
-        with:
-          component-name: worldserver
-          push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
-          registry: ${{ env.REGISTRY }}
-          version: ${{ env.VERSION }}
+      # {{{
+      - uses: docker/metadata-action@v5
+        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-worldserver" }
+        id: meta-worldserver
 
-      - name: build authserver
-        uses: ./customize/.github/actions/build-and-publish
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          component-name: authserver
+          target: worldserver
+          file: apps/docker/Dockerfile
+          context: ${{ github.workspace }}
           push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
-          registry: ${{ env.REGISTRY }}
-          version: ${{ env.VERSION }}
+          tags: ${{ steps.meta-worldserver.outputs.tags }}
+          # platforms: linux/amd64,linux/arm64
+          build-args: |
+            USER_ID=1000
+            GROUP_ID=1000
+            DOCKER_USER=acore
+      # }}}
+      # {{{
+      - uses: docker/metadata-action@v5
+        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-authserver" }
+        id: meta-authserver
 
-      - name: build db-import
-        uses: ./customize/.github/actions/build-and-publish
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          component-name: db-import
+          target: authserver
+          file: apps/docker/Dockerfile
+          context: ${{ github.workspace }}
           push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
-          registry: ${{ env.REGISTRY }}
-          version: ${{ env.VERSION }}
+          tags: ${{ steps.meta-authserver.outputs.tags }}
+          # platforms: linux/amd64,linux/arm64
+          build-args: |
+            USER_ID=1000
+            GROUP_ID=1000
+            DOCKER_USER=acore
+      # }}}
+      # {{{
+      - uses: docker/metadata-action@v5
+        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-db-import" }
+        id: meta-db-import
 
-      - name: build client-data
-        uses: ./customize/.github/actions/build-and-publish
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          component-name: client-data
+          target: db-import
+          file: apps/docker/Dockerfile
+          context: ${{ github.workspace }}
           push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
-          registry: ${{ env.REGISTRY }}
-          version: ${{ env.VERSION }}
+          tags: ${{ steps.meta-db-import.outputs.tags }}
+          # platforms: linux/amd64,linux/arm64
+          build-args: |
+            USER_ID=1000
+            GROUP_ID=1000
+            DOCKER_USER=acore
+      # }}}
+      # {{{
+      - uses: docker/metadata-action@v5
+        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-client-data" }
+        id: meta-client-data
 
-      - name: build tools
-        uses: ./customize/.github/actions/build-and-publish
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          component-name: tools
+          target: client-data
+          file: apps/docker/Dockerfile
+          context: ${{ github.workspace }}
           push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
-          registry: ${{ env.REGISTRY }}
-          version: ${{ env.VERSION }}
+          tags: ${{ steps.meta-client-data.outputs.tags }}
+          # platforms: linux/amd64,linux/arm64
+          build-args: |
+            USER_ID=1000
+            GROUP_ID=1000
+            DOCKER_USER=acore
+      # }}}
+      # {{{
+      - uses: docker/metadata-action@v5
+        with: { images: "${{ env.REGISTRY }}/acore/ac-wotlk-tools" }
+        id: meta-tools
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          target: tools
+          file: apps/docker/Dockerfile
+          context: ${{ github.workspace }}
+          push: ${{ env.RUNNING_ON_PRIMARY_BRANCH }}
+          tags: ${{ steps.meta-tools.outputs.tags }}
+          # platforms: linux/amd64,linux/arm64
+          build-args: |
+            USER_ID=1000
+            GROUP_ID=1000
+            DOCKER_USER=acore
+      # }}}
