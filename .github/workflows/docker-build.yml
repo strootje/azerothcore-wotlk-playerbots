@@ -27,12 +27,11 @@ jobs:
           sudo rm -rf /opt/ghc
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      - uses: actions/checkout@v4
-
       - name: Download AzerothCore
         uses: actions/checkout@v4
         with:
           repository: liyunfan1223/azerothcore-wotlk
+      - uses: actions/checkout@v4
 
       - name: Download PlayerBots
         uses: actions/checkout@v4
