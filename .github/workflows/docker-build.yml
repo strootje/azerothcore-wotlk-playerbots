@@ -31,9 +31,7 @@ jobs:
 
       - name: Download AzerothCore
         uses: actions/checkout@v4
-        with:
-          repository: liyunfan1223/azerothcore-wotlk
-          path: src
+        with: { repository: liyunfan1223/azerothcore-wotlk }
 
       - name: Download PlayerBots
         uses: actions/checkout@v4
